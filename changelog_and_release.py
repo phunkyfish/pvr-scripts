@@ -94,7 +94,7 @@ def current_version(xml_content):
     return version_match.group('version')
 
 
-def update_addon_xml(addon_xml, xml_content, old_version, new_version):
+def update_xml_version(addon_xml, xml_content, old_version, new_version):
     print('\tOld Version: {version}'.format(version=old_version))
     print('\tNew Version: {version}'.format(version=new_version))
 
@@ -122,6 +122,9 @@ def main():
     parser.add_argument('changelog_text', type=str,
                         help='Text to be added to the changelog (without version number).')
 
+    parser.add_argument('-n', '--update-news', action='store_true',
+                        help='Add changes to news section of the addon.xml.in')
+
     args = parser.parse_args()
 
     print('')
@@ -136,11 +139,14 @@ def main():
     changelog_text = args.changelog_text
     changelog_text = changelog_text.strip()
     changelog_text = changelog_text.replace(r'\n', '\n')
+    changelog_text = changelog_text.replace(r'\t', '\t')
 
-    update_addon_xml(addon_xml, xml_content, old_version, new_version)
+    update_xml_version(addon_xml, xml_content, old_version, new_version)
 
     update_changelog(new_version, changelog_text)
-    update_news(addon_xml, new_version, changelog_text)
+
+    if args.update_news:
+        update_news(addon_xml, new_version, changelog_text)
 
     print('')
 
