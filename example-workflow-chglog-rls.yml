@@ -11,6 +11,10 @@ on:
         description: 'Input the changes you''d like to add to the changelogs. Your text should be encapsulated in "''s with line feeds represented by literal \n''s. ie. "This is the first change\nThis is the second change"'
         required: true
         default: ''
+      update_news:
+        description: 'Update news in addon.xml.in? [true|false]'
+        required: true
+        default: 'true'
 
 jobs:
   default:
@@ -43,13 +47,21 @@ jobs:
 
       - name: Increment version and update changelogs
         run: |
-          python3 ../scripts/changelog_and_release.py ${{ github.event.inputs.version_type }} ${{ github.event.inputs.changelog_text }}
+          if [[ ${{ github.event.inputs.update_news }} == true ]] ;
+          then
+            python3 ../scripts/changelog_and_release.py ${{ github.event.inputs.version_type }} ${{ github.event.inputs.changelog_text }} --update-news
+          elif [[ ${{ github.event.inputs.update_news }} == false ]] ;
+          then
+            python3 ../scripts/changelog_and_release.py ${{ github.event.inputs.version_type }} ${{ github.event.inputs.changelog_text }}
+          else
+            exit 1
+          fi
         working-directory: ${{ github.event.repository.name }}
 
       - name: Get required variables
         id: required-variables
         run: |
-          changes=$(xmlstarlet fo -R "$(find . -name addon.xml.in)" | xmlstarlet sel -t -v '//news' -n | awk -v RS= 'NR==1')
+          changes=$(cat "$(find . -name changelog.txt)" | awk -v RS= 'NR==1')
           changes="${changes//'%'/'%25'}"
           changes="${changes//$'\n'/'%0A'}"
           changes="${changes//$'\r'/'%0D'}"
