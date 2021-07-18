@@ -65,7 +65,7 @@ pushd "$TARGET_PATH/$REPO_NAME" > /dev/null 2>&1
 git co $BRANCH_NAME > /dev/null 2>&1
 check_error $? "Failed to apply patch as branch \"$BRANCH_NAME\" does not exist"
 
-if [ "$FORCE_PUSH" = "true" ]
+if [ "$FILE_TYPE" = "patch" ]
 then
 patch -p1 < "$ABS_FILE_PATH" > /dev/null 2>&1
 check_error $? "$FILE_TYPE failed"
