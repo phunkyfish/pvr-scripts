@@ -113,3 +113,4 @@ jobs:
           body: ${{ steps.required-variables.outputs.changes }}
           draft: false
           prerelease: false
+          commitish: ${{ steps.required-variables.outputs.branch }}
