@@ -73,7 +73,7 @@ else
 "$ABS_FILE_PATH" > /dev/null 2>&1
 check_error $? "$FILE_TYPE failed"
 fi
-git add -u
+git add .
 git commit -m "$COMMIT_MESSAGE" > /dev/null 2>&1
 check_error $? "Nothing to commit, likely an issue with the $FILE_TYPE file"
 
