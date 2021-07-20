@@ -188,7 +188,7 @@ def current_version(xml_content):
     version_match = GET_VERSION.search(xml_content)
     if not version_match:
         print('Unable to determine current version... skipping.', '')
-        return
+        return ''
 
     return version_match.group('version')
 
@@ -243,10 +243,17 @@ def main():
     print('')
 
     addon_xml = find_addon_xml()
+    if not addon_xml:
+        print('addon.xml.in not found. exiting...')
+        exit(1)
 
     xml_content = read_addon_xml(addon_xml)
 
     old_version = current_version(xml_content)
+    if not old_version:
+        print('Unable to determine the current version. exiting...')
+        exit(1)
+
     new_version = increment_version(old_version, version_type=args.version_type)
 
     changelog_text = args.changelog_text
