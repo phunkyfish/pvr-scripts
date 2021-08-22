@@ -1,19 +1,26 @@
 # -*- coding: utf-8 -*-
 """
-Update the changelog, news (optionally) and increment the version of a binary add-on.
+    Copyright (C) 2021 TeamKodi
 
-usage: changelog_and_release.py [-h] [-d] [-n] {micro,minor} changelog_text
+    This file is part of pvr-scripts
 
-positional arguments:
-  {micro,minor}      Increment "micro" or "minor" version
-  changelog_text     Text to be added to the changelog (without version
-                     number).
+    SPDX-License-Identifier: GPL-3.0-only
+    See LICENSES/GPL-3.0-only for more information.
 
-optional arguments:
-  -h, --help         show this help message and exit
-  -d, --add-date     Add date to version number in changelog and news. ie.
-                     "v1.0.1 (2021-7-17)"
-  -n, --update-news  Add changes to news section of the addon.xml.in
+    Update the changelog, news (optionally) and increment the version of a binary add-on.
+
+    usage: changelog_and_release.py [-h] [-d] [-n] {micro,minor} changelog_text
+
+    positional arguments:
+      {micro,minor}      Increment "micro" or "minor" version
+      changelog_text     Text to be added to the changelog (without version
+                         number).
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      -d, --add-date     Add date to version number in changelog and news. ie.
+                         "v1.0.1 (2021-7-17)"
+      -n, --update-news  Add changes to news section of the addon.xml.in
 
 """
 
@@ -110,9 +117,11 @@ def create_changelog_string(version, changelog_text, add_date=False):
     )
 
 
-def update_changelog(version, changelog_text, add_date=False):
+def update_changelog(changelog, version, changelog_text, add_date=False):
     """
     Update the changelog.txt with a formatted version of the provided information
+    :param changelog: path with filename to changelog.txt
+    :type changelog: str
     :param version: version number being created
     :type version: str
     :param changelog_text: string containing the changes for this version use '\n' and '\t' these will be replaced later
@@ -120,24 +129,33 @@ def update_changelog(version, changelog_text, add_date=False):
     :param add_date: add date to the version number. ie. v1.0.0 (2021-7-19)
     :type add_date: bool
     """
-    changelog = find_changelog()
-    if not changelog:
-        return
 
     changelog_string = create_changelog_string(version, changelog_text, add_date)
 
-    print('Writing changelog.txt:\n\'\'\'\n{lines}\'\'\''.format(lines=changelog_string))
-    with open(changelog, 'r+') as f:
+    with open(changelog, 'r') as f:
         content = f.read()
-        f.seek(0, 0)
-        f.write(changelog_string + content)
+
+    return changelog_string + content
 
 
-def update_news(addon_xml, version, changelog_text, add_date=False):
+def write_changelog(changelog, contents):
+    """
+    Append contents to the top of the changelog
+    :param changelog: path with filename to the changelog.txt
+    :type changelog: str
+    :param contents: contents to be appended to changelog.txt
+    :type contents: str
+    """
+    print('Writing changelog.txt:\n\'\'\'\n{lines}\'\'\''.format(lines=contents))
+    with open(changelog, 'w') as f:
+        f.write(contents)
+
+
+def update_news(xml_content, version, changelog_text, add_date=False):
     """
     Update the news element of the addon.xml.in with a formatted version of the provided information
-    :param addon_xml: path with filename to the addon.xml.in
-    :type addon_xml: str
+    :param xml_content: contents of the addon.xml.in
+    :type xml_content: str
     :param version: version number being created
     :type version: str
     :param changelog_text: string containing the changes for this version, use '\n' and '\t' these will be replaced later
@@ -145,11 +163,9 @@ def update_news(addon_xml, version, changelog_text, add_date=False):
     :param add_date: add date to the version number. ie. v1.0.0 (2021-7-19)
     :type add_date: bool
     """
-    xml_content = read_addon_xml(addon_xml)
-
     changelog_string = create_changelog_string(version, changelog_text, add_date)
 
-    print('Writing news to addon.xml.in:\n\'\'\'\n{lines}\'\'\''.format(lines=changelog_string))
+    print('Adding news to addon.xml.in:\n\'\'\'\n{lines}\'\'\''.format(lines=changelog_string))
 
     new_xml_content = xml_content.replace('<news>', '<news>\n{lines}'.format(
         lines=changelog_string
@@ -157,10 +173,7 @@ def update_news(addon_xml, version, changelog_text, add_date=False):
 
     new_xml_content = new_xml_content.replace('\n\n\n', '\n\n')
 
-    with open(addon_xml, 'w') as open_file:
-        open_file.write(new_xml_content)
-
-    print('')
+    return new_xml_content
 
 
 def read_addon_xml(addon_xml):
@@ -193,11 +206,9 @@ def current_version(xml_content):
     return version_match.group('version')
 
 
-def update_xml_version(addon_xml, xml_content, old_version, new_version):
+def update_xml_version(xml_content, old_version, new_version):
     """
     Update the version in the addon.xml.in contents
-    :param addon_xml: path with filename to the addon.xml.in
-    :type addon_xml: str
     :param xml_content: contents of the addon.xml.in
     :type xml_content: str
     :param old_version: the old/current version number
@@ -215,11 +226,22 @@ def update_xml_version(addon_xml, xml_content, old_version, new_version):
 
     if xml_content == new_xml_content:
         print('XML was unmodified... skipping.', '')
-        return
+        return ''
 
+    return new_xml_content
+
+
+def write_addon_xml(addon_xml, xml_content):
+    """
+    Write the provided xml to the addon.xml.in
+    :param addon_xml: path with filename to the addon.xml.in
+    :type addon_xml: str
+    :param xml_content: contents of the addon.xml.in
+    :type xml_content: str
+    """
     print('Writing {filename}'.format(filename=addon_xml))
     with open(addon_xml, 'w') as open_file:
-        open_file.write(new_xml_content)
+        open_file.write(xml_content)
 
     print('')
 
@@ -261,12 +283,21 @@ def main():
     changelog_text = changelog_text.replace(r'\n', '\n')
     changelog_text = changelog_text.replace(r'\t', '\t')
 
-    update_xml_version(addon_xml, xml_content, old_version, new_version)
+    xml_content = update_xml_version(xml_content, old_version, new_version)
+    if not xml_content:
+        print('Unable to update the current version in the addon.xml.in. exiting...')
+        exit(1)
 
-    update_changelog(new_version, changelog_text, args.add_date)
+    write_addon_xml(addon_xml, xml_content)
+
+    changelog = find_changelog()
+    if changelog:
+        changelog_content = update_changelog(new_version, changelog_text, args.add_date)
+        write_changelog(changelog, changelog_content)
 
     if args.update_news:
-        update_news(addon_xml, new_version, changelog_text, args.add_date)
+        xml_content = update_news(xml_content, new_version, changelog_text, args.add_date)
+        write_addon_xml(addon_xml, xml_content)
 
     print('')
 
