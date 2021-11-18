@@ -52,12 +52,12 @@ FOUND=false
 #
 
 pushd "$TARGET_PATH/$REPO_NAME" > /dev/null 2>&1
-git co $BASE_BRANCH > /dev/null 2>&1
+git checkout $BASE_BRANCH > /dev/null 2>&1
 git pull > /dev/null 2>&1
 
 git show-ref --verify --quiet "refs/heads/$BRANCH_NAME" > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-	git co $BRANCH_NAME > /dev/null 2>&1
+	git checkout $BRANCH_NAME > /dev/null 2>&1
 	echo "Could not create branch \"$BRANCH_NAME\" as it already exists for repo: $REPO_NAME"
 	exit 1
 fi

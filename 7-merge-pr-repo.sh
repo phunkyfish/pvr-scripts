@@ -52,7 +52,7 @@ FOUND=false
 #
 
 pushd "$TARGET_PATH/$REPO_NAME" > /dev/null 2>&1
-git co $BRANCH_NAME > /dev/null 2>&1
+git checkout $BRANCH_NAME > /dev/null 2>&1
 ORIGIN_USER=`git remote -v | grep origin | grep fetch | awk -F "/" '{print $4}'`
 
 PR_CREATE_OUTPUT=`gh pr create --repo $UPSTREAM_ORG/$REPO_NAME --base $BASE_BRANCH --head $ORIGIN_USER:$BRANCH_NAME --title="test" --body="test" 2>&1`
