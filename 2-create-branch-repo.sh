@@ -62,7 +62,7 @@ if [ $? -eq 0 ]; then
 	exit 1
 fi
 
-git co -b $BRANCH_NAME > /dev/null 2>&1
+git checkout -b $BRANCH_NAME > /dev/null 2>&1
 check_error $? "Could not create branch \"$BRANCH_NAME\""
 
 popd > /dev/null 2>&1
