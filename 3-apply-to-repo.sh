@@ -62,7 +62,7 @@ FOUND=false
 ABS_FILE_PATH="$( cd "$( dirname "$FILE_PATH")"; pwd)/$(basename "$FILE_PATH")"
 
 pushd "$TARGET_PATH/$REPO_NAME" > /dev/null 2>&1
-git co $BRANCH_NAME > /dev/null 2>&1
+git checkout $BRANCH_NAME > /dev/null 2>&1
 check_error $? "Failed to apply patch as branch \"$BRANCH_NAME\" does not exist"
 
 if [ "$FILE_TYPE" = "patch" ]
