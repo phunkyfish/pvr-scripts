@@ -292,7 +292,8 @@ def main():
 
     changelog = find_changelog()
     if changelog:
-        changelog_content = update_changelog(new_version, changelog_text, args.add_date)
+        changelog_content = update_changelog(changelog, new_version,
+                                             changelog_text, args.add_date)
         write_changelog(changelog, changelog_content)
 
     if args.update_news:
