@@ -6,7 +6,7 @@ SCOPES_LIST=`cat "$SCRIPT_DIR/config/$REPO_PREFIX-scopes.txt" | tr '\n' ' '`
 # Need at least 2 args
 if [ $# -le 1 ]
 then
-	echo -e "\nUsage: $0 scope <fork-org> *<target-path>\n"
+	echo -e "\nUsage: $0 scope <branch-name> *<target-path>\n"
 	echo -e "Create a branch in each repo\n"
 	echo -e "scope: specify a valid scope for \"$REPO_PREFIX\" repos from the list: $SCOPES_LIST"
 	echo -e "branch-name: the name of the new branch to be created."
