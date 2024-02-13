@@ -67,6 +67,7 @@ check_error $? "Could not fetch upstream"
 git checkout -b $BASE_BRANCH > /dev/null 2>&1
 
 git branch -u upstream/$BASE_BRANCH $BASE_BRANCH > /dev/null 2>&1
+git pull > /dev/null 2>&1
 check_error $? "Could not set default branch to upstream"
 
 popd > /dev/null 2>&1
