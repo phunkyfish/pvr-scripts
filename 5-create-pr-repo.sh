@@ -7,7 +7,7 @@ if [ $# -le 3 ]
 then
 	echo -e "\nUsage: $0 <repo-name> <branch-name> <pr-title> <pr-body> *<target-path>\n"
 	echo -e "Create a PR in the upstream using the given branch in the origin repo\n"
-	echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+	echo -e "repo-name: the valid name of a repo."
 	echo -e "branch-name: the name of the new branch to be created."
 	echo -e "pr-title: the title for the PR."
 	echo -e "pr-body: the body for the PR."
@@ -26,7 +26,7 @@ MULTI_RUN=$6
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Creating PR using \"$BRANCH_NAME\" for \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Creating PR using \"$BRANCH_NAME\" for repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -36,7 +36,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 check_target_path_exists
 check_target_repo_path_exists
 

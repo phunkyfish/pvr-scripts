@@ -7,7 +7,7 @@ if [ $# -le 2 ]
 then
    echo -e "\nUsage: $0 <repo-name> <version-type> <changelog-message> *<target-path>\n"
    echo -e "Add a changelog and version commit to the upstream repo and tag a release.\n"
-   echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+   echo -e "repo-name: the valid name of a repo."
    echo -e "version-type: minor|micro minor for new features, micro for fixes and language updates"
    echo -e "changelog-message: the changelog message to use in the commit."
    echo -e "target-path: optional argument specifying the path where the repo should be located. If not specified the current directory will be used.\n"
@@ -24,7 +24,7 @@ MULTI_RUN=$5
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Creating release with changelog or \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Creating release with changelog or repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -34,7 +34,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 check_target_path_exists
 check_target_repo_path_exists
 

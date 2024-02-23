@@ -20,15 +20,6 @@ get_target_path()
 	fi
 }
 
-check_repo_prefix()
-{
-	if [[ $REPO_NAME != $REPO_PREFIX\.* ]]
-	then
-		echo -e "ERROR: Repo name must start with \"$REPO_PREFIX.\""
-		exit 1
-	fi
-}
-
 check_target_clone_path_not_exists()
 {
 	if [ -d "$TARGET_PATH/$REPO_NAME" ]
@@ -58,7 +49,7 @@ check_target_path_exists()
 
 check_valid_scope()
 {
-	if ! grep "$SCOPE" "$SCRIPT_DIR/config/$REPO_PREFIX-scopes.txt" > /dev/null 2>&1;
+	if ! grep "$SCOPE" "$SCRIPT_DIR/config/binary-addon-scopes.txt" > /dev/null 2>&1;
 	then
 		echo -e "ERROR: scope must be set to one of: $SCOPES_LIST"
 		exit 1
@@ -99,7 +90,7 @@ check_any_directories_exist_prior_to_multi_clone_run()
 				echo -e "ERROR: Cannot clone \"$REPO_NAME\" repo, path already exists: $TARGET_PATH/$REPO_NAME"
 			fi
 		fi
-	done < "$SCRIPT_DIR/config/$REPO_PREFIX-repos.txt"
+	done < "$SCRIPT_DIR/config/binary-addon-repos.txt"
 
 	if [ "$ANY_DIRECTORIES_EXIST" = "true" ]
 	then
@@ -124,7 +115,7 @@ check_any_directories_missing_prior_to_run()
 				echo -e "ERROR: Directory for \"$REPO_NAME\" repo does not exist: $TARGET_PATH/$REPO_NAME"
 			fi
 		fi
-	done < "$SCRIPT_DIR/config/$REPO_PREFIX-repos.txt"
+	done < "$SCRIPT_DIR/config/binary-addon-repos.txt"
 
 	if [ "$ANY_DIRECTORIES_MISSING" = "true" ]
 	then

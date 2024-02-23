@@ -7,7 +7,7 @@ if [ $# -le 1 ]
 then
   echo -e "\nUsage: $0 <repo-name> <branch-name> *<target-path>\n"
   echo -e "Merge the PR in the upstream using the given branch in the origin repo\n"
-  echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+  echo -e "repo-name: the valid name of a repo."
   echo -e "branch-name: the name of the new branch to be created."
   echo -e "target-path: optional argument specifying the path where the repo should be located. If not specified the current directory will be used.\n"
   echo -e "\nNote: it is assumed the repo's were correctly cloned and configured using \"clone-setup-repo(s).sh\""
@@ -22,7 +22,7 @@ MULTI_RUN=$4
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Merging PR using \"$BRANCH_NAME\" for \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Merging PR using \"$BRANCH_NAME\" for repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -32,7 +32,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 check_target_path_exists
 check_target_repo_path_exists
 
@@ -61,7 +60,7 @@ PR_URL=`echo $PR_CREATE_OUTPUT | awk '{print $NF}' | grep https`
 
 if [ -z "$PR_URL" ]
 then
-	echo -e "ERROR: PR does not exist for branch \"$BRANCH_NAME\" in \"$REPO_PREFIX\" repo: $REPO_NAME"
+	echo -e "ERROR: PR does not exist for branch \"$BRANCH_NAME\" in repo: $REPO_NAME"
 else
 	PR_MERGE_OUTPUT=`gh pr merge --merge $PR_URL 2>&1`
 

@@ -7,7 +7,7 @@ if [ $# -le 4 ]
 then
 	echo -e "\nUsage: $0 <repo-name> <branch-name> <patch-path> <commit-message> *<target-path>\n"
 	echo -e "Apply a patch or script with the given commit message to the root of the repo for the given branch\n"
-	echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+	echo -e "repo-name: the valid name of arepo."
 	echo -e "branch-name: the name of the new branch to be created."
 	echo -e "file-type: patch|script for a patch file or script to be executed as a child process"
 	echo -e "file-path: the path to the file to be applied to the root of the repo. Will be applied with \"patch -p1 < file-path\" if it's patch file, otherwise as a child process."
@@ -28,7 +28,7 @@ MULTI_RUN=$7
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Applying $FILE_TYPE \"$FILE_PATH\" to branch \"$BRANCH_NAME\" for \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Applying $FILE_TYPE \"$FILE_PATH\" to branch \"$BRANCH_NAME\" for repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -38,7 +38,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 check_target_path_exists
 check_target_repo_path_exists
 check_valid_file_type

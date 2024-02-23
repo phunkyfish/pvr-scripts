@@ -27,7 +27,7 @@ while read line; do
 
 		break
 	fi
-done < "$SCRIPT_DIR/config/$REPO_PREFIX-repos.txt"
+done < "$SCRIPT_DIR/config/binary-addon-repos.txt"
 
 if [ "$FOUND" != "true" ]
 then

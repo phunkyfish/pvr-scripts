@@ -6,8 +6,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ $# -le 2 ]
 then
 	echo -e "\nUsage: $0 <repo-name> <branch-name> <patch-path> <commit-message> *<target-path>\n"
-	echo -e "Push the specified branch to origin for the specified $REPO_PREFIX repo\n"
-	echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+	echo -e "Push the specified branch to origin for the specified repo\n"
+	echo -e "repo-name: the valid name of a repo."
 	echo -e "branch-name: the name of the new branch to be created."
 	echo -e "force-push: true|false if the branch shoudl be force pushed"
 	echo -e "target-path: optional argument specifying the path where the repo should be located. If not specified the current directory will be used.\n"
@@ -24,7 +24,7 @@ MULTI_RUN=$5
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Pushing branch \"$BRANCH_NAME\" for \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Pushing branch \"$BRANCH_NAME\" for repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -34,7 +34,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 check_target_path_exists
 check_target_repo_path_exists
 

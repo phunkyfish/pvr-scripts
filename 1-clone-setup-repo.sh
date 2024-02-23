@@ -6,9 +6,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ $# -le 1 ]
 then
 	echo -e "\nUsage: $0 <fork-org> <repo-name> *<target-path>\n"
-	echo -e "Clone a valid $REPO_PREFIX repo, add an \"upstream\" remote and set correct default branch from \"upstream\"\n"
-	echo -e "fork-org: the github user/org where the fork of the upstream $REPO_PREFIX repo resides. Note: it is assumed that the forks exist."
-	echo -e "repo-name: the valid name of a $REPO_PREFIX repo."
+	echo -e "Clone a valid repo, add an \"upstream\" remote and set correct default branch from \"upstream\"\n"
+	echo -e "fork-org: the github user/org where the fork of the upstream repo resides. Note: it is assumed that the forks exist."
+	echo -e "repo-name: the valid name of a repo."
 	echo -e "target-path: optional argument specifying the path where the clone should be located. If not specified the current directory will be used.\n"
 	exit 1
 fi
@@ -21,7 +21,7 @@ MULTI_RUN=$4
 
 if [ -z "$MULTI_RUN" ]
 then
-	echo -e "Cloning starting for \"$REPO_PREFIX\" repo: $REPO_NAME\n"
+	echo -e "Cloning starting for repo: $REPO_NAME\n"
 fi
 
 . "$SCRIPT_DIR/helper/functions.sh"
@@ -31,7 +31,6 @@ fi
 #
 
 TARGET_PATH=$(get_target_path)
-check_repo_prefix
 if [ ! -d "$TARGET_PATH" ]
 then
 	mkdir -p "$TARGET_PATH" > /dev/null 2>&1
@@ -67,8 +66,9 @@ check_error $? "Could not fetch upstream"
 git checkout -b $BASE_BRANCH > /dev/null 2>&1
 
 git branch -u upstream/$BASE_BRANCH $BASE_BRANCH > /dev/null 2>&1
-git pull > /dev/null 2>&1
 check_error $? "Could not set default branch to upstream"
+git pull > /dev/null 2>&1
+check_error $? "Could not pull $BASE_BRANCH"
 
 popd > /dev/null 2>&1
 popd > /dev/null 2>&1

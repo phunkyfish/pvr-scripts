@@ -1,14 +1,14 @@
 #!/bin/bash
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . "$SCRIPT_DIR/config/config.ini"
-SCOPES_LIST=`cat "$SCRIPT_DIR/config/$REPO_PREFIX-scopes.txt" | tr '\n' ' '`
+SCOPES_LIST=`cat "$SCRIPT_DIR/config/binary-addon-scopes.txt" | tr '\n' ' '`
 
 # Need it least 4 args
 if [ $# -le 3 ]
 then
 	echo -e "\nUsage: $0 <scope> <branch-name> <pr-title> <pr-body> *<target-path>\n"
 	echo -e "Create a PR in the upstream using the given branch in the origin for each repo\n"
-	echo -e "scope: specify a valid scope for \"$REPO_PREFIX\" repos from the list: $SCOPES_LIST"
+	echo -e "scope: specify a valid scope for repos from the list: $SCOPES_LIST"
 	echo -e "branch-name: the name of the new branch to be created."
 	echo -e "pr-title: the title for the PR."
 	echo -e "pr-body: the body for the PR."
@@ -29,7 +29,7 @@ TARGET_PATH=$5
 #
 
 check_valid_scope
-echo -e "Create PR in upstream starting for \"$REPO_PREFIX\" repos with scope: $SCOPE\n"
+echo -e "Create PR in upstream starting for repos with scope: $SCOPE\n"
 TARGET_PATH=$(get_target_path)
 check_target_path_exists
 check_any_directories_missing_prior_to_run
@@ -43,8 +43,8 @@ while read line; do
 	UPSTREAM_ORG=`echo $line | awk '{print $2}'`
 	BRANCH=`echo $line | awk '{print $3}'`
 
-	if [ "$SCOPE" = "all" ] || [ "$UPSTREAM_ORG" = "$SCOPE" ]
+	if [ "$SCOPE" = "all" ] || [ "$UPSTREAM_ORG" = "$SCOPE" ] || [[ "$SCOPE" = "all-kodi-pvr"  && $REPO_NAME == pvr.* ]]
 	then
 		"$SCRIPT_DIR/5-create-pr-repo.sh" "$REPO_NAME" "$BRANCH_NAME" "$PR_TITLE" "$PR_BODY" "$TARGET_PATH" "multi_run"
 	fi
-done < "$SCRIPT_DIR/config/$REPO_PREFIX-repos.txt"
+done < "$SCRIPT_DIR/config/binary-addon-repos.txt"
